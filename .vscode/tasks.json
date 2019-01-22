@@ -25,3 +25,32 @@
         }
     ]
 }
+
+///For Windows
+// {
+//     // See https://go.microsoft.com/fwlink/?LinkId=733558
+//     // for the documentation about the tasks.json format
+//     "version": "2.0.0",
+//     "tasks": [
+//         {
+//             "label": "Build && Run C++",
+//             "type": "shell",
+//             "command": "g++ -m32 --std=c++11 ${fileDirname}/${fileBasename} -o output && output",
+//             "group": {
+//                 "kind": "build",
+//                 "isDefault": true
+//             },
+//             "problemMatcher": []
+//         },
+//         {
+//             "label": "Build && Run C++ INPUT",
+//             "type": "shell",
+//             "command": "g++ -m32 --std=c++11 ${fileDirname}/${fileBasename} -o output && output < ${fileDirname}/input.txt",
+//             "group": {
+//                 "kind": "build",
+//                 "isDefault": true
+//             },
+//             "problemMatcher": []
+//         }
+//     ]
+// }
