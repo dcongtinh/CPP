@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <malloc/_malloc.h>
+#include <malloc.h>
 
 #define MAX_N 100
 #define MAX_M 500
@@ -20,24 +20,19 @@ typedef struct
 
 typedef struct
 {
-    List adj[MAX_N]; //mảng các danh sách
+    List adj[MAX_N]; //m?ng các danh sách
     int n, m;
 } Graph;
 
-void MakeNullList(List *L)
+void make_null_list(List *L)
 {
     L->header = NULL;
     L->size = 0;
 }
 
-bool isEmpty(List *L)
+NodePointer MakeNode(int x)
 {
-    return (L->size);
-}
-
-Node *MakeNode(Node *P, int x)
-{
-    P = (Node *)malloc(sizeof(Node));
+    NodePointer P = (NodePointer)malloc(sizeof(struct Node));
     P->element = x;
     P->next = NULL;
     return P;
@@ -45,14 +40,13 @@ Node *MakeNode(Node *P, int x)
 
 void print_list(List *L)
 {
-    // NodePointer Header = L->header;
-    printf("%d", L->header->element);
-    // while (Header != NULL)
-    // {
-    //     printf("%d ", Header->element);
-    //     Header = Header->next;
-    // }
-    // printf("\n");
+     NodePointer Header = L->header;
+     while (Header != NULL)
+     {
+         printf("%d ", Header->element);
+         Header = Header->next;
+     }
+     printf("\n");
 }
 
 int len(List *L)
@@ -62,82 +56,89 @@ int len(List *L)
 
 void push_back(List *L, int x)
 {
-    Node *P;
-    P = MakeNode(P, x);
+    NodePointer P = MakeNode(x);
 
-    if (L == NULL)
+    if (L->header == NULL)
     {
         L->header = P;
         L->size++;
         return;
     }
-    // NodePointer Header = L->header;
-    // while (Header->next != NULL)
-    // {
-    //     Header = Header->next;
-    // }
-    // Header->next = P;
+     NodePointer Header = L->header;
+     while (Header->next != NULL)
+     {
+         Header = Header->next;
+     }
+     Header->next = P;
+     L->size++;  
 }
 
-// int Retrive(List L, int k)
-// {
-//     int idx = 1;
-//     while (L != NULL && idx != k)
-//     {
-//         ++idx;
-//         L = L->next;
-//     }
-//     return L->data;
-// }
+void init_graph(Graph *pG, int n, int m)
+{
+    int i;
+    for (i = 1; i <= n; ++i)
+        make_null_list(&pG->adj[i]);
+    pG->n = n;
+    pG->m = m;
+}
 
-// int SearchFirst(List L, int x)
-// {
-//     int idx = 1;
-//     while (L != NULL && L->data != x)
-//     {
-//         ++idx;
-//         L = L->next;
-//     }
-//     return (L != NULL ? idx : 0);
-// }
+void add_edge(Graph *pG, int x, int y)
+{
+	push_back(&pG->adj[x], y);
+	push_back(&pG->adj[y], x);
+}
 
-// void DeleteFirst(List &L)
-// {
-//     L = L->next;
-// }
+int degree(Graph *pG, int x)
+{
+    return pG->adj[x].size;
+}
 
-// void DeleteKPos(List &L, int k)
-// {
-//     if (k == 1)
-//     {
-//         DeleteFirst(L);
-//         return;
-//     }
-//     Node *P = L;
-//     int idx = 1;
-//     while (P != NULL && idx != k - 1)
-//     {
-//         P = P->next;
-//         ++idx;
-//     }
-//     //	cout << "*" << P->data << "*" << endl;
-//     P->next = P->next->next;
-// }
+int adjacent(Graph *pG, int x, int y)
+{
+    int i;
+    for (i = 1; i <= pG->adj[x].size; ++i)
+    {
+    	NodePointer Header = pG->adj[x].header;
+	     while (Header!= NULL)
+	     {
+	     	if (Header->element == y) return 1;
+	         Header = Header->next;
+	     }
+    }
+    return 0;
+}
 
-// void Delete(List &L, int x)
-// {
-//     //	cout << SearchFirst(L, x);
-//     //	DeleteKPos(L, 1);
-//     while (SearchFirst(L, x))
-//         DeleteKPos(L, SearchFirst(L, x));
-// }
+void neighbours(Graph *pG, int x)
+{
+    int i, n = pG->n;
+    for (i = 1; i <= n; ++i)
+    {
+        if (adjacent(pG, x, i))
+            printf("%d ", i);
+    }
+}
+
+void print_graph(Graph *pG){
+	int i = 1;
+	for (; i <= pG->n; ++i){
+		printf("Vertex %d: ", i);
+		neighbours(pG, i);
+		printf("\n");
+	}	
+}
+
 int main()
 {
-    List L;
-    MakeNullList(&L);
-    push_back(&L, 1);
-    printf("%d", L.header->element);
-    // push_back(&L, 2);
-    // push_back(&L, 3);
-    // print_list(&L);
+	freopen("input.txt", "r", stdin);
+    int n, m, i = 1;
+    scanf("%d%d", &n, &m);
+    Graph G;
+    init_graph(&G, n, m);
+    for (; i <= m; ++i)
+    {
+        int u, v;
+        scanf("%d%d", &u, &v);
+        add_edge(&G, u, v);
+    }
+    print_graph(&G);
 }
