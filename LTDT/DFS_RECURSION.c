@@ -75,7 +75,7 @@ void dfs(Graph *pG, int u){
 	printf("%d\n", u);
 	for (i = 1; i <= pG->n; ++i){
 		if (adjacent(pG, u, i) && !vis[i]){
-			vis[i] = false;
+			vis[i] = true;
 			dfs(pG, i);
 		}
 	}
