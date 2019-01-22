@@ -19,9 +19,9 @@ void init_graph(Graph *pG, int n, int m)
 
 void print_graph(Graph *pG)
 {
-    int n = pG->n, m = pG->m;
+    int n = pG->n, m = pG->m, i;
     printf("%d %d\n", n, m);
-    for (int i = 0; i < m; ++i)
+    for (i = 0; i < m; ++i)
     {
         printf("%d %d\n", pG->edges[i].u, pG->edges[i].v);
     }
@@ -37,15 +37,16 @@ void add_edge(Graph *pG, int u, int v)
 
 int degree(Graph *pG, int u)
 {
-    int cnt = 0;
-    for (int i = 0; i < pG->m; ++i)
+    int cnt = 0, i;
+    for (i = 0; i < pG->m; ++i)
         cnt += (pG->edges[i].u == u || pG->edges[i].v == u);
     return cnt;
 }
 
 int adjacent(Graph *pG, int u, int v) ///u adjacent v
 {
-    for (int i = 0; i < pG->m; ++i)
+    int i;
+    for (i = 0; i < pG->m; ++i)
     {
         if ((pG->edges[i].u == u && pG->edges[i].v == v) || (pG->edges[i].v == u && pG->edges[i].u == v))
             return 1;
@@ -55,7 +56,8 @@ int adjacent(Graph *pG, int u, int v) ///u adjacent v
 
 void neighbours(Graph *pG, int x)
 {
-    for (int i = 1; i <= pG->n; ++i)
+    int i;
+    for (i = 1; i <= pG->n; ++i)
     {
         if (adjacent(pG, x, i))
             printf("%d ", i);
@@ -64,10 +66,10 @@ void neighbours(Graph *pG, int x)
 int main()
 {
     Graph G;
-    int n, m;
+    int n, m, i;
     scanf("%d%d", &n, &m);
     init_graph(&G, n, m);
-    for (int i = 0; i < m; ++i)
+    for (i = 0; i < m; ++i)
     {
         int u, v;
         scanf("%d%d", &u, &v);
