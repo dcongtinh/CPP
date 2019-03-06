@@ -39,6 +39,25 @@ BigInteger newBigInteger(){
 	return s;
 }
 
+BigInteger RemoveLeadingZero(BigInteger s){
+	BigInteger res = newBigInteger();
+	int idx = 0, pos = 0;
+	if (s[0] == '-') {
+		idx = 1;
+		res[pos++] = '-';
+	}
+	while (s[idx] == '0') ++idx;
+	if (idx == strlen(s)) {
+		res[0] = '0';
+		return res;
+	}
+	int i;
+	for (i = idx; i < strlen(s); ++i){
+		res[pos++] = s[i];
+	}
+	return res;
+}
+
 void Swap(BigInteger *x, BigInteger *y){
 	BigInteger tmp;
 	tmp = *x;
@@ -81,7 +100,7 @@ BigInteger Left(BigInteger x, int n){
 
 // Lay tri tuyet doi cua so nguyen lon x
 BigInteger ABS(BigInteger x){
-	if (Sign(x)) return Right(x, strlen(x)-1);
+	if (Sign(x) < 0) return Right(x, strlen(x)-1);
 	return x;
 }
 
@@ -92,12 +111,7 @@ BigInteger Nhan10_mu_n (BigInteger x, int n){
 	s = Left(x, len);
 	for (i = len; i < len+n; ++i) s[i] = '0';
 	return s;
-}           
-
-// Kiem tra xem co phai so 0?
-int Zero(BigInteger x){
-    return Sign(x) == 0;
-}    
+}            
 
 // Kiem tra xem co phai so duong hay khong
 int Positive(BigInteger x){
@@ -124,33 +138,18 @@ int Equal(BigInteger x, BigInteger y){
     return strcmp(x, y) == 0;
 }
 
-/*
- Ham xet xem so n co nho hon so m
- Ta xet cac truong hop sau
- 0- neu n bang m   => Khong nho hon
- 1- n am va m khong am => n<m
- 2- n bang khong va m duong       => n<m
- 3- n khong am va m am            => n>m
- 4- n duong va m khong duong      => n>m
- 5- n va m cung duong va do dai cua n nho hon m => n<m
- 6- n va m cung khong am, cung do dai, xet tung ky tu cho den khi gap n[i]<m[i] thi n<m
- 7- n va m cung am, thi n<m khi abs(m)<abs(n)
- 
- */
- 
-  
 int Less_Than(BigInteger x, BigInteger y){
 	int i, lenX = strlen(x), lenY = strlen(y);
 	if (Equal(x, y)) return 0;
 	if (Not_Positive(x) && Positive(y)) return 1;
 	if (Positive(x) && Not_Positive(y)) return 0;
+	
 	if (Sign(x) > 0){
 		if (lenX > lenY) return 0;
 		if (lenX < lenY) return 1;
-		for (i = 0; i < lenX; ++i){
-			if (x[i] > y[i]) return 0;
-		}
-		return 1;
+		int i = 0;
+		while (x[i] == y[i]) ++i;
+		return x[i] < y[i];
 	} else {
 		if (lenX > lenY) return 1;
 		if (lenX < lenY) return 0;
@@ -161,20 +160,30 @@ int Less_Than(BigInteger x, BigInteger y){
 	}
 }   
 
-int Less_Or_Equal(BigInteger x, BigInteger y){
-	return Less_Than(x, y) || Equal(x, y);
-}                           
-// Xet xem so n co lon hon so m hay khong
-int Greater_Than(BigInteger x, BigInteger y){
-	return !Less_Or_Equal(x, y);
-}
-int Greater_Or_Equal(BigInteger x, BigInteger y){
-	return Greater_Than(x, y) || Equal(x, y);
-}        
-// Ham tru so nguyen x cho y voi gia thiet x>=y
-// Ky tu = so + 48
+BigInteger Add(BigInteger x, BigInteger y);
 
-BigInteger Subtract1(BigInteger x, BigInteger y){ // 23 18
+// nhan mot so nguyen voi so 1 hoac -1
+BigInteger MultS(BigInteger x, int sign){
+	BigInteger s = newBigInteger();
+	int i, len = strlen(x);
+	if (sign < 0){
+		int pos = 0;
+		if (Sign(x) > 0) s[pos++] = '-';
+		for (i = Sign(x) < 0 ? 1 : 0; i < len; ++i) s[pos++] = x[i];
+		return s;
+	}
+	return x;
+}
+
+BigInteger Subtract(BigInteger x, BigInteger y){
+	if (Sign(x) == 0){
+		if (Sign(y) > 0) return MultS(y, -1);
+		return ABS(y);
+	}
+	if (Sign(y) == 0) return x;
+	if (Sign(x) > 0 && Sign(y) < 0) return Add(x, ABS(y));
+	if (Sign(x) < 0 && Sign(y) > 0) return MultS(Add(ABS(x), y), -1);
+	if (Sign(x) < 0 && Sign(y) < 0) return Subtract(ABS(y), ABS(x));
 	int sign = 1;
 	BigInteger a = newBigInteger();
 	BigInteger b = newBigInteger();
@@ -182,35 +191,29 @@ BigInteger Subtract1(BigInteger x, BigInteger y){ // 23 18
 	int i, lenX = strlen(x), lenY = strlen(y), len = max(lenX, lenY), tmp = 0;
 	if (Less_Than(x, y)) {
 		sign = -1;
-		Swap(x, y);
+		Swap(&x, &y);
 	}
 	a = Reverse(x);
 	b = Reverse(y);
-	a = Nhan10_mu_n(a, len-lenX);
-	b = Nhan10_mu_n(b, len-lenY);
+	
+	a = Nhan10_mu_n(a, len-strlen(a));
+	b = Nhan10_mu_n(b, len-strlen(b));
 	
 	for (i = 0; i < max(lenX, lenY); ++i){
 		int sub = a[i]-'0' - (b[i]-'0' + tmp);
-		s[i] = (sub + (sub < 0 ? 10: 0))%10 + '0'; //100 9
+		s[i] = (sub + (sub < 0 ? 10: 0))%10 + '0';
 		tmp = sub < 0 ? 1: 0;
-		printf("%d %c %d\n", sub, s[i], tmp);
 	}
-	if (tmp) s[len] = tmp+'0';
-	if (sign < 0) s[len+1] = '-';
-	return Reverse(s);
+	if (tmp) s[len++] = tmp+'0';
+	if (sign < 0) s[len] = '-';
+	return RemoveLeadingZero(Reverse(s));
 } 
 
-// nhan mot so nguyen voi so 1 hoac -1
-BigInteger MultS(BigInteger x, int s){
-}
-
-// Tru hai so bat ky x cho y
-BigInteger Subtract(BigInteger x, BigInteger y){
-}
-
-
-// cong 2 so nguyen khong am
-BigInteger Add1(BigInteger x, BigInteger y){
+// cong 2 so nguyen bat ki
+BigInteger Add(BigInteger x, BigInteger y){
+	if (Sign(x) > 0 && Sign(y) < 0) return Subtract(x, ABS(y));
+	if (Sign(x) < 0 && Sign(y) > 0) return Subtract(y, ABS(x));
+	if (Sign(x) < 0 && Sign(y) < 0) return MultS(Add(ABS(x), ABS(y)), -1);
 	BigInteger a = newBigInteger();
 	BigInteger b = newBigInteger();
 	BigInteger s = newBigInteger();
@@ -227,28 +230,37 @@ BigInteger Add1(BigInteger x, BigInteger y){
 	return Reverse(s);
 } 
 
-// Cong hai so bat ky
-BigInteger Add(BigInteger n1, BigInteger n2){
-	
+BigInteger ConvertIntToBigInteger(int x){
+	BigInteger res = newBigInteger();
+	if (x == 0) {
+		res[0] = '0';
+		return res;
+	}
+	int i = 0;
+	while (x > 0){
+		res[i++] = x%10 + '0';
+		x /= 10;
+		
+	}
+	return Reverse(res);
 }
-
-// Cong 3 so nguyen
-BigInteger Add3(BigInteger n1, BigInteger n2, BigInteger n3){
-}
- 
- 
 // Nhan 2 so nguyen co mot chu so 
 BigInteger Mult1(BigInteger x, BigInteger y){
+	int i = 0, j = 0;
+	if (Sign(x) < 0) i = 1;
+	if (Sign(y) < 0) j = 1;
+	if (Sign(x)*Sign(y) == 0) return ConvertIntToBigInteger(0);
+	return MultS(ConvertIntToBigInteger((x[i]-'0')*(y[j]-'0')), Sign(x)*Sign(y));
 } 
 
 
 BigInteger Mult(BigInteger X, BigInteger Y, int n){
    BigInteger m1,m2,m3,A,B,C,D;
+   
    int s; // Luu tru dau cua tich XY 
    s = Sign(X)*Sign(Y); 
    X = ABS(X); //Lay tri tuyet doi cua X 
    Y = ABS(Y);
-
    if (n == 1)  return MultS(Mult1(X,Y),s);
    
    A = Left(X, n/2);
@@ -259,24 +271,28 @@ BigInteger Mult(BigInteger X, BigInteger Y, int n){
    m2 = Mult(Subtract(A,B),Subtract(D,C), n/2);
    m3 = Mult(B,D, n/2);
    
-   return MultS(Add3(Nhan10_mu_n(m1,n),Nhan10_mu_n(Add3(m1,m2,m3),n/2), m3),s);
+   return MultS(Add(Nhan10_mu_n(m1,n), Add(Nhan10_mu_n(Add(m1, Add(m2,m3)),n/2),  m3)),s);
 }
 
+BigInteger FillLeadingZero(BigInteger x, int maxLen){
+	x = Reverse(x);
+	x = Nhan10_mu_n(x, maxLen-strlen(x));
+	x = Reverse(x);
+	return x;
+}
 
 int main(){
     BigInteger x, y;
-     x=(BigInteger)malloc(sizeof(char)*256);
-	 y=(BigInteger)malloc(sizeof(char)*256);
-	
+	x = (BigInteger)malloc(sizeof(char)*256);
+	y = (BigInteger)malloc(sizeof(char)*256);
+
 	ReadFromFile(x,y);
-	
 	printf("\nSo nguyen X= %s\n\n",x);
 	printf("So nguyen Y= %s\n\n",y);
-	printf("%s", Subtract1(x, y));
-//	printf("Tong So X+Y= %s\n",Add(x,y));
-//	
-//	printf("Tich So XY= %s\n",Mult(x,y,strlen(ABS(x))));
-//	free(x);
-//	free(y);
+	int maxLen = max(strlen(x), strlen(y));
+	x = FillLeadingZero(x, maxLen);
+	y = FillLeadingZero(y, maxLen);
+	
+	printf("%s", RemoveLeadingZero(Mult(x, y, strlen(x))));
 	return 0;
 }
