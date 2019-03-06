@@ -4,7 +4,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build && Run C++",
+            "label": "Build && Run C++ (MacOS)",
             "type": "shell",
             "command": "g++ --std=c++14 ${fileDirname}/${fileBasename} -o ~/.run/run && ~/.run/run",
             "group": {
@@ -14,9 +14,39 @@
             "problemMatcher": []
         },
         {
-            "label": "Build && Run C++ INPUT",
+            "label": "Build && Run C++ INPUT (MacOS)",
             "type": "shell",
             "command": "g++ --std=c++14 ${fileDirname}/${fileBasename} -o ~/.run/run && ~/.run/run < ${fileDirname}/input.txt",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Build && Run C++ (WinOS)",
+            "type": "shell",
+            "command": "g++ -m32 --std=c++11 ${fileDirname}/${fileBasename} -o output && output",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Build && Run C++ INPUT (WinOS)",
+            "type": "shell",
+            "command": "g++ -m32 --std=c++11 ${fileDirname}/${fileBasename} -o output && output < ${fileDirname}/input.txt",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Build && Run Python",
+            "type": "shell",
+            "command": "python ${fileDirname}/${fileBasename}",
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -25,32 +55,3 @@
         }
     ]
 }
-
-///For Windows
-// {
-//     // See https://go.microsoft.com/fwlink/?LinkId=733558
-//     // for the documentation about the tasks.json format
-//     "version": "2.0.0",
-//     "tasks": [
-//         {
-//             "label": "Build && Run C++",
-//             "type": "shell",
-//             "command": "g++ -m32 --std=c++11 ${fileDirname}/${fileBasename} -o output && output",
-//             "group": {
-//                 "kind": "build",
-//                 "isDefault": true
-//             },
-//             "problemMatcher": []
-//         },
-//         {
-//             "label": "Build && Run C++ INPUT",
-//             "type": "shell",
-//             "command": "g++ -m32 --std=c++11 ${fileDirname}/${fileBasename} -o output && output < ${fileDirname}/input.txt",
-//             "group": {
-//                 "kind": "build",
-//                 "isDefault": true
-//             },
-//             "problemMatcher": []
-//         }
-//     ]
-// }
