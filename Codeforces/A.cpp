@@ -2,22 +2,42 @@
 
 using namespace std;
 
-int x;
-
-int main(int argc, const char *argv[])
+int songuyento(int x)
 {
-	cin >> x;
-	for (int a = 1; a <= x; ++a)
+	if (x < 2)
+		return 0;
+	for (int i = 2; i <= sqrt(x); ++i)
 	{
-		for (int b = 1; b <= x; ++b)
+		if (x % i == 0)
+			return 0;
+	}
+	return 1;
+}
+
+void songuyento2(int x)
+{
+	for (int i = 2; i <= sqrt(x); ++i)
+	{
+		if (x % i == 0)
 		{
-			if (a % b == 0 && a * b > x && a / b < x)
-			{
-				cout << a << " " << b << endl;
-				return 0;
-			}
+			printf("NO");
+			return;
 		}
 	}
-	cout << -1 << endl;
-	return 0;
+	printf("YES");
+}
+
+int main()
+{
+	int n;
+	cin >> n;
+	for (int i = 1; i <= n; ++i)
+	{
+		int x;
+		cin >> x;
+		if (songuyento(x))
+			printf("%d YES\n", x);
+		else
+			printf("%d NO\n", x);
+	}
 }
