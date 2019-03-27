@@ -3,6 +3,7 @@
         "algorithm": "c",
         "random": "c",
         "stdc++.h": "c",
-        "map": "cpp"
+        "map": "cpp",
+        "string": "cpp"
     }
 }
