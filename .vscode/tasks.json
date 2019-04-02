@@ -26,7 +26,7 @@
         {
             "label": "Build && Run C++ (WinOS)",
             "type": "shell",
-            "command": "g++ -m32 --std=c++11 ${fileDirname}/${fileBasename} -o output.exe",
+            "command": "g++ -m32 --std=c++11 ${fileDirname}/${fileBasename} -o output && output",
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -36,7 +36,7 @@
         {
             "label": "Build && Run C++ INPUT (WinOS)",
             "type": "shell",
-            "command": "g++ -m32 --std=c++11 ${fileDirname}/${fileBasename} -o output.exe < ${fileDirname}/input.txt",
+            "command": "g++ -m32 --std=c++11 ${fileDirname}/${fileBasename} -o output && output < ${fileDirname}/input.txt",
             "group": {
                 "kind": "build",
                 "isDefault": true
