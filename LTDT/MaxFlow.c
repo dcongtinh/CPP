@@ -5,7 +5,7 @@
 #define MAX_M 500
 
 int s, t, front = 0, rear = 0;
-int delta[MAX_M], f[MAX_M][MAX_M], trace[MAX_M], queue[MAX_M];
+int delta[MAX_M], f[MAX_M][MAX_M], trace[MAX_M], queue[MAX_M], label[MAX_M];
 
 typedef struct
 {
@@ -53,6 +53,7 @@ int FindPath(Graph *pG)
     int n = pG->n, u, v;
     for (u = 1; u <= n; ++u)
         trace[u] = 0;
+    label[s] = 1;
     trace[s] = s;
     delta[s] = oo;
     push(s);
@@ -66,12 +67,14 @@ int FindPath(Graph *pG)
                 if (pG->c[u][v] > f[u][v])
                 {
                     trace[v] = u;
+                    label[v] = 1;
                     delta[v] = min(delta[u], pG->c[u][v] - f[u][v]);
                     push(v);
                 }
                 else if (f[v][u])
                 {
                     trace[v] = -u;
+                    label[v] = -1;
                     delta[v] = min(delta[u], f[v][u]);
                     push(v);
                 }
@@ -95,12 +98,11 @@ void IncFlow()
             f[v][u] -= delta[t];
         }
         v = u;
-        }
+    }
 }
 
 int main()
 {
-    freopen("input.txt", "r", stdin);
     Graph G;
     int n, m, i;
     scanf("%d%d", &n, &m);
@@ -113,27 +115,19 @@ int main()
     }
     s = 1;
     t = n;
+
     while (FindPath(&G))
         IncFlow();
-    int ans = 0, d1 = 0, d2 = 0;
-    int X0[MAX_M], Y0[MAX_M];
+    int ans = 0;
     for (i = 1; i <= n - 1; ++i)
-    {
         ans += f[i][t];
-        printf("%d %d\n", f[s][i], G.c[s][i]);
-        if (f[i][t] && G.c[i][t] && f[i][t] - G.c[i][t])
-        {
-            Y0[++d2] = i;
-        }
-        else
-            X0[++d1] = i;
-    }
-    Y0[++d2] = n;
     printf("Max flow: %d\n", ans);
     printf("X0: ");
-    for (i = 1; i <= d1; ++i)
-        printf("%d ", X0[i]);
+    for (i = 1; i <= n; ++i)
+        if (trace[i])
+            printf("%d ", i);
     printf("\nY0: ");
-    for (i = 1; i <= d2; ++i)
-        printf("%d ", Y0[i]);
+    for (i = 1; i <= n; ++i)
+        if (!trace[i])
+            printf("%d ", i);
 }
