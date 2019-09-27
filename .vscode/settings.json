@@ -4,6 +4,7 @@
         "random": "c",
         "stdc++.h": "c",
         "map": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "iostream": "cpp"
     }
 }
