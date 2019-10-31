@@ -52,6 +52,16 @@
                 "isDefault": true
             },
             "problemMatcher": []
+        },
+        {
+            "label": "Compile GNU Prolog (MacOS)",
+            "type": "shell",
+            "command": "clear; plgc ${fileDirname}/${fileBasename}; open ${fileDirname}/${fileBasenameNoExtension}",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
         }
     ]
 }
