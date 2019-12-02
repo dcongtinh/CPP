@@ -46,7 +46,7 @@
         {
             "label": "Build && Run Python",
             "type": "shell",
-            "command": "python ${fileDirname}/${fileBasename}",
+            "command": "py ${fileDirname}/${fileBasename}",
             "group": {
                 "kind": "build",
                 "isDefault": true
