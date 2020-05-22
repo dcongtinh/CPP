@@ -4,9 +4,14 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Build && Run C++ (MacOS)",
+            "label": "Build && Run C++",
             "type": "shell",
-            "command": "g++ --std=c++14 ${fileDirname}/${fileBasename} -o ~/.run/run && ~/.run/run",
+            "windows": {
+                "command": "g++ -m32 --std=c++11 ${fileDirname}/${fileBasename} -o output && output"
+            },
+            "osx": {
+                "command": "g++ --std=c++14 ${fileDirname}/${fileBasename} -o ~/.run/run && ~/.run/run"
+            },
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -14,29 +19,14 @@
             "problemMatcher": []
         },
         {
-            "label": "Build && Run C++ INPUT (MacOS)",
+            "label": "Build && Run C++ INPUT",
             "type": "shell",
-            "command": "g++ --std=c++14 ${fileDirname}/${fileBasename} -o ~/.run/run && ~/.run/run < ${fileDirname}/input.txt",
-            "group": {
-                "kind": "build",
-                "isDefault": true
+            "windows": {
+                "command": "g++ -m32 --std=c++11 ${fileDirname}/${fileBasename} -o output && output < ${fileDirname}/input.txt"
             },
-            "problemMatcher": []
-        },
-        {
-            "label": "Build && Run C++ (WinOS)",
-            "type": "shell",
-            "command": "g++ -m32 --std=c++11 ${fileDirname}/${fileBasename} -o output && output",
-            "group": {
-                "kind": "build",
-                "isDefault": true
+            "osx": {
+                "command": "g++ --std=c++14 ${fileDirname}/${fileBasename} -o ~/.run/run && ~/.run/run < ${fileDirname}/input.txt"
             },
-            "problemMatcher": []
-        },
-        {
-            "label": "Build && Run C++ INPUT (WinOS)",
-            "type": "shell",
-            "command": "g++ -m32 --std=c++11 ${fileDirname}/${fileBasename} -o output && output < ${fileDirname}/input.txt",
             "group": {
                 "kind": "build",
                 "isDefault": true
