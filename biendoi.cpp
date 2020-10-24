@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#define ll int
+#define ll long long
 using namespace std;
 
 string solve(ll a, ll b)
