@@ -32,11 +32,8 @@ int main()
         }
         fto(j, 1, m)
         {
-            if (h[j] > 0 && r[j] - l[j] + 1 > 0)
-            {
-                res = h[j] * (r[j] - l[j] + 1);
-                ans = max(ans, min(h[j], r[j] - l[j] + 1));
-            }
+            int d = min(h[j], r[j] - l[j] + 1);
+            ans = max(ans, d*d);
         }
     }
     printf("%d", ans);
