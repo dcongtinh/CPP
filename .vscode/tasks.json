@@ -6,10 +6,10 @@
             "label": "Build && Run C++",
             "type": "shell",
             "windows": {
-                "command": "g++ -m32 --std=c++14 ${fileDirname}/${fileBasename} -o output && output"
+                "command": "g++ -m32 --std=c++17 ${fileDirname}/${fileBasename} -o output && output"
             },
             "osx": {
-                "command": "g++ --std=c++14 ${fileDirname}/${fileBasename} -o ~/run && ~/run"
+                "command": "g++ --std=c++17 ${fileDirname}/${fileBasename} -o ~/run && ~/run"
             },
             "group": {
                 "kind": "build",
