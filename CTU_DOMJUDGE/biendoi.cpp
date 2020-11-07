@@ -2,16 +2,26 @@
 #define ll long long
 using namespace std;
 
+// string solve(ll a, ll b)
+// {
+//     if (a >= b)
+//         return "YES";
+//     if (a % 2 == 0 && 3 * a / 2 > a)
+//         return "YES";
+//     if (a % 2 == 1 && 3 * (a - 1) / 2 > a)
+//         return "YES";
+//     return "NO";
+// }
+
 string solve(ll a, ll b)
 {
-    if (a >= b)
+    if ((a == 2 && b == 3) || (a >= b))
         return "YES";
-    if (a % 2 == 0 && 3 * a / 2 > a)
-        return "YES";
-    if (a % 2 == 1 && 3 * (a - 1) / 2 > a)
+    if (a > 3)
         return "YES";
     return "NO";
 }
+
 int main()
 {
     int t;
